@@ -3,7 +3,12 @@ module kj-study
 go 1.22.3
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.2 // indirect
+	github.com/PuerkitoBio/goquery v1.9.2
+	github.com/imroc/req/v3 v3.43.7
+	github.com/k0kubun/pp/v3 v3.2.0
+)
+
+require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
@@ -11,8 +16,9 @@ require (
 	github.com/google/pprof v0.0.0-20240227163752-401108e1b7e7 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/imroc/req/v3 v3.43.7 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/onsi/ginkgo/v2 v2.16.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
