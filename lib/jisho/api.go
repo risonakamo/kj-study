@@ -3,12 +3,13 @@
 package jisho
 
 import (
-	"fmt"
+	"kj-study/lib/utils"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/imroc/req/v3"
+	"github.com/rs/zerolog/log"
 )
 
 // get words of some N level from a target page.
@@ -39,7 +40,7 @@ func getNLevelWords(
 	var collectedWords []string
 	// target words and add them to collection. trim the words.
 	doc.Find("span.text").Each(func(i int,element *goquery.Selection) {
-		var trimmed string=strings.Trim(element.Text()," \n\r")
+		var trimmed string=utils.TrimWhitespace(element.Text())
 
 		if trimmed=="Words" {
 			return
@@ -92,16 +93,46 @@ func getSentencesForWord(
 		panic(e)
 	}
 
+	var collected []string
+
+	// find all sentence containers
 	doc.Find("ul.japanese_sentence").Each(func(_ int,element *goquery.Selection) {
+		var sentenceParts []string
+
+		// sentence container is bunch of text nodes intermixed with li nodes. each li node has
+		// 2 nodes in it - hiragana and kanji. take the kanji node.
 		element.Contents().Each(func(_ int,childElement *goquery.Selection) {
+			// li element. handle specially
 			if childElement.Is("li") {
-				fmt.Println("was li")
-				return
+				var liSize int=childElement.Children().Length()
+
+				switch liSize {
+					// pair of hiragana and not hiragana. take the 2nd
+					case 2:
+					sentenceParts=append(
+						sentenceParts,
+						utils.TrimWhitespace(childElement.Children().Eq(1).Text()),
+					)
+
+					// just 1 hiragana. take the 1st
+					case 1:
+					sentenceParts=append(
+						sentenceParts,
+						utils.TrimWhitespace(childElement.Children().First().Text()),
+					)
+
+					default:
+					log.Warn().Msgf("strange li size: %d",liSize)
+				}
+
+			// text. just take the text
 			} else {
-				fmt.Println(childElement.Text())
+				sentenceParts=append(sentenceParts,utils.TrimWhitespace(childElement.Text()))
 			}
 		})
+
+		collected=append(collected,strings.Join(sentenceParts,""))
 	})
 
-	return []string{}
+	return collected
 }
