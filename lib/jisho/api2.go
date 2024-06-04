@@ -46,7 +46,7 @@ func getSentencesMulti(
 
     var page int
     for page=pageStart; page<=pageEnd; page++ {
-        fmt.Println("getting sents")
+        fmt.Println("getting sents",word,page)
         var newSentences []string=getSentencesForWord(word,page,client)
 
         if len(newSentences)==0 {

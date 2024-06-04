@@ -12,9 +12,11 @@ type WordSentenceDict map[string][]string
 
 // get words-sentences dict. give limits to how much should try to get
 func getWordSentencesFromApi(
+    nLevel int,
+
 	wordPageLimit int,
 	sentencePageLimit int,
-    nLevel int,
+
     client *req.Client,
 ) WordSentenceDict {
     var wordsDict WordSentenceDict=make(WordSentenceDict)
