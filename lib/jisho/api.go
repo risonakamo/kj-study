@@ -1,4 +1,4 @@
-// jisho api accessing functions
+// jisho api accessing functions. raw api - should return exactly what the api is providing
 
 package jisho
 
@@ -14,6 +14,7 @@ import (
 
 // get words of some N level from a target page.
 // lower N levels include all words of the higher levels.
+// page number starts at 1.
 func getNLevelWords(
 	nLevel int,
 	page int,
@@ -52,24 +53,8 @@ func getNLevelWords(
 	return collectedWords
 }
 
-// get N level words words from range of pages
-func getNLevelWordsMulti(
-	nLevel int,
-	pageStart int,
-	pageEnd int,
-	client *req.Client,
-) []string {
-	var collected []string
-
-	var page int
-	for page=pageStart; page<=pageEnd; page++ {
-		collected=append(collected,getNLevelWords(nLevel,page,client)...)
-	}
-
-	return collected
-}
-
 // get sentences for a word on certain page
+// page number starts at 1.
 func getSentencesForWord(
 	word string,
 	page int,

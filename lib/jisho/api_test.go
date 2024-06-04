@@ -14,13 +14,6 @@ func Test_getWords1(t *testing.T) {
 	pp.Println(result)
 }
 
-func Test_getWords2(t *testing.T) {
-	client:=req.C()
-	result:=getNLevelWordsMulti(2,1,10,client)
-
-	pp.Println(result)
-}
-
 func Test_getSentences(t *testing.T) {
 	result:=getSentencesForWord(
 		"直線",
