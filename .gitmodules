@@ -1,0 +1,3 @@
+[submodule "kj-study-web"]
+	path = kj-study-web
+	url = https://github.com/risonakamo/kj-study-web.git
