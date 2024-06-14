@@ -8,6 +8,22 @@ import (
 	"github.com/imroc/req/v3"
 )
 
+// func args for get word sentences mt
+type GetWordSentencesMtOptions struct {
+	nLevel int
+
+	wordPageStart int
+	wordPageEnd int
+	sentencePageLimit int
+
+	client *req.Client
+
+    // give 0 for each worker to do 1 page
+    pagesPerWorker int
+    workers int
+}
+
+// job for word worker
 type GetWordsJob struct {
 	wordPageStart int
 	wordPageEnd int
@@ -15,16 +31,7 @@ type GetWordsJob struct {
 
 // multithread version of get word sentences
 func getWordSentences_mt(
-	nLevel int,
-
-	wordPageStart int,
-	wordPageEnd int,
-	sentencePageLimit int,
-
-	client *req.Client,
-
-    pagesPerWorker int,
-    workers int,
+	options GetWordSentencesMtOptions,
 ) WordSentenceDict {
     // word jobs submitted to be acted upon by word workers.
     // close this ch to end word workers and finish all jobs
@@ -43,12 +50,12 @@ func getWordSentences_mt(
     var wordWorkersWg sync.WaitGroup
 
     // spawn word workers
-    for range workers {
+    for range options.workers {
         wordWorkersWg.Add(1)
         go wordWorker(
-            nLevel,
-            sentencePageLimit,
-            client,
+            options.nLevel,
+            options.sentencePageLimit,
+            options.client,
 
             wordJobsCh,
             sentenceDictResultsCh,
@@ -65,12 +72,15 @@ func getWordSentences_mt(
 
     // main thread worker - continuously submit jobs until hit the limit, or, found empty dict
     // signal triggered.
-    var currentPage int=wordPageStart
-    var currentEndPage int=currentPage+pagesPerWorker
+    var currentPage int=options.wordPageStart
+    var currentEndPage int=currentPage+options.pagesPerWorker
     jobSubmit:
     for {
+        fmt.Println("current page:",currentPage)
+
         // if over the page end, done
-        if currentPage>wordPageEnd {
+        if currentPage>options.wordPageEnd {
+            fmt.Println("page end")
             break
         }
 
@@ -83,21 +93,29 @@ func getWordSentences_mt(
             default:
         }
 
+        fmt.Println("submit job:",currentPage,currentEndPage)
         wordJobsCh<-GetWordsJob{
             wordPageStart: currentPage,
             wordPageEnd: currentEndPage,
         }
+        fmt.Println("done submit job")
 
         currentPage=currentEndPage+1
-        currentEndPage=currentPage+pagesPerWorker
+        currentEndPage=currentPage+options.pagesPerWorker
     }
+
 
     // done submitting jobs. close the jobs ch to kill workers
     close(wordJobsCh)
 
-    // wait for worker finish jobs. close sentence submission ch to cause collector to
-    // return final result
+    fmt.Println("all jobs submitted. waiting for workers to complete")
+    // wait for worker finish jobs
     wordWorkersWg.Wait()
+
+    // close sentence submission ch to cause collector to
+    // return final result
+    fmt.Println("all workers done")
+    close(sentenceDictResultsCh)
 
     // wait for final result to come in
     return <-finalDictCh
@@ -126,9 +144,12 @@ func wordWorker(
             client,
         )
 
+        fmt.Println("worker trying to submit")
         submitCh<-gotWordsDict
+        fmt.Println("submitted")
     }
 
+    fmt.Println("worker done")
     wg.Done()
 }
 
@@ -144,10 +165,14 @@ func dictMergeWorker(
 ) {
     var collectedDict WordSentenceDict=make(WordSentenceDict)
 
+    var collectedCount int=0
     var sentenceDict WordSentenceDict
     for sentenceDict = range sentenceDictsCh {
-        fmt.Println("got words",len(sentenceDict))
-        if len(collectedDict)==0 {
+        fmt.Println("collector got words",len(sentenceDict))
+        collectedCount++
+        fmt.Println("collected:",collectedCount)
+        if len(sentenceDict)==0 {
+            fmt.Println("triggering empty dict")
             foundEmptySentenceDict<-struct{}{}
         }
 
