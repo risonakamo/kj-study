@@ -3,7 +3,11 @@
 
 package jisho
 
-import "github.com/imroc/req/v3"
+import (
+	"fmt"
+
+	"github.com/imroc/req/v3"
+)
 
 // word-sentence dict. contains multiple words, and each word has a list of sentences
 // key: a word
@@ -22,14 +26,18 @@ func getWordSentencesFromApi(
 ) WordSentenceDict {
     var wordsDict WordSentenceDict=make(WordSentenceDict)
 
+    fmt.Println("getting words")
     var words []string=getNLevelWordsMulti(nLevel,wordPageStart,wordPageEnd,client)
+    fmt.Println("word get complete")
 
+    fmt.Println("getting sentences")
     var word string
     for _,word = range words {
         var sentences []string=getSentencesMulti(word,1,sentencePageLimit,client)
 
         wordsDict[word]=sentences
     }
+    fmt.Println("sentence get complete")
 
     return wordsDict
 }

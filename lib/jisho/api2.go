@@ -20,7 +20,6 @@ func getNLevelWordsMulti(
 
 	var page int
 	for page=pageStart; page<=pageEnd; page++ {
-        fmt.Println("getting")
         var newWords []string=getNLevelWords(nLevel,page,client)
 
         // got an empty page. immediately end
