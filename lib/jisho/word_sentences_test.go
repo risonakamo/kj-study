@@ -11,7 +11,7 @@ import (
 )
 
 func Test_getWordSentences(t *testing.T) {
-    result:=getWordSentencesFromApi(2,20,3,req.C())
+    result:=getWordSentencesFromApi(2,1,20,3,req.C())
 
     if len(result)==0 {
         t.Error("result was empty")
@@ -21,7 +21,7 @@ func Test_getWordSentences(t *testing.T) {
 }
 
 func Test_saveWordSentences(t *testing.T) {
-    result:=getWordSentencesFromApi(2,3,1,req.C())
+    result:=getWordSentencesFromApi(2,1,3,1,req.C())
 
     if len(result)==0 {
         t.Error("result was empty")

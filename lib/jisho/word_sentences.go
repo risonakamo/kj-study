@@ -14,14 +14,15 @@ type WordSentenceDict map[string][]string
 func getWordSentencesFromApi(
     nLevel int,
 
-	wordPageLimit int,
+    wordPageStart int,
+	wordPageEnd int,
 	sentencePageLimit int,
 
     client *req.Client,
 ) WordSentenceDict {
     var wordsDict WordSentenceDict=make(WordSentenceDict)
 
-    var words []string=getNLevelWordsMulti(nLevel,1,wordPageLimit,client)
+    var words []string=getNLevelWordsMulti(nLevel,wordPageStart,wordPageEnd,client)
 
     var word string
     for _,word = range words {
