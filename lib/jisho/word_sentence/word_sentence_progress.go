@@ -1,4 +1,6 @@
-package jisho
+// progress printer for mt
+
+package jisho_ws
 
 import (
 	"fmt"

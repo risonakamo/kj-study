@@ -1,9 +1,11 @@
 // funcs dealing with the word-sentence data struct, which combines words and sentences
 // into one data structure
 
-package jisho
+package jisho_ws
 
 import (
+	"kj-study/lib/jisho"
+
 	"github.com/imroc/req/v3"
 )
 
@@ -24,11 +26,11 @@ func getWordSentencesFromApi(
 ) WordSentenceDict {
     var wordsDict WordSentenceDict=make(WordSentenceDict)
 
-    var words []string=getNLevelWordsMulti(nLevel,wordPageStart,wordPageEnd,client)
+    var words []string=jisho.GetNLevelWordsMulti(nLevel,wordPageStart,wordPageEnd,client)
 
     var word string
     for _,word = range words {
-        var sentences []string=getSentencesMulti(word,1,sentencePageLimit,client)
+        var sentences []string=jisho.GetSentencesMulti(word,1,sentencePageLimit,client)
 
         wordsDict[word]=sentences
     }

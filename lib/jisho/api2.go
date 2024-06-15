@@ -10,7 +10,7 @@ import (
 )
 
 // get N level words words from range of pages. if get a page where the result is empty, immediately stops
-func getNLevelWordsMulti(
+func GetNLevelWordsMulti(
 	nLevel int,
 	pageStart int,
 	pageEnd int,
@@ -35,7 +35,7 @@ func getNLevelWordsMulti(
 }
 
 // get sentences for a word from multiple pages. immediately end on empty page
-func getSentencesMulti(
+func GetSentencesMulti(
     word string,
     pageStart int,
     pageEnd int,

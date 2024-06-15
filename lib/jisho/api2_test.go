@@ -9,7 +9,7 @@ import (
 
 func Test_getWords2(t *testing.T) {
 	client:=req.C()
-	result:=getNLevelWordsMulti(2,1,10,client)
+	result:=GetNLevelWordsMulti(2,1,10,client)
 
 	pp.Println(result)
 }
@@ -17,7 +17,7 @@ func Test_getWords2(t *testing.T) {
 // get words over the page limit
 func Test_getWords3(t *testing.T) {
 	client:=req.C()
-	result:=getNLevelWordsMulti(2,200,210,client)
+	result:=GetNLevelWordsMulti(2,200,210,client)
 
 	pp.Println(result)
 }

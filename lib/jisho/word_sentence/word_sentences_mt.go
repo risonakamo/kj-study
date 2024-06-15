@@ -1,4 +1,4 @@
-package jisho
+package jisho_ws
 
 import (
 	"maps"
