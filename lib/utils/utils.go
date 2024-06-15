@@ -3,6 +3,7 @@
 package utils
 
 import (
+	"math/rand/v2"
 	"os"
 	"path/filepath"
 	"strings"
@@ -35,4 +36,20 @@ func GetHereDirExe() string {
     }
 
     return filepath.Dir(exePath)
+}
+
+// shuffle an array
+func ShuffleArray[T any](array []T) {
+    rand.Shuffle(len(array),func (i int,j int) {
+        (array)[i],(array)[j]=(array)[j],(array)[i]
+    })
+}
+
+// random pick from array
+func RandomSliceArray[T any](array []T,size int) []T {
+    var arrayCopy []T=array[:]
+
+    ShuffleArray(arrayCopy)
+
+    return arrayCopy[0:size]
 }

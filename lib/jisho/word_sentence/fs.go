@@ -41,3 +41,21 @@ func WriteSentences(
 		panic(e)
 	}
 }
+
+// read a sentence data dir
+func ReadSentences(
+	dirpath string,
+) WordSentenceDict {
+	var data WordSentenceDict=make(WordSentenceDict)
+	var e error
+
+	data,e=utils.ReadGob[WordSentenceDict](
+		filepath.Join(dirpath,"data.gob"),
+	)
+
+	if e!=nil {
+		panic(e)
+	}
+
+	return data
+}
