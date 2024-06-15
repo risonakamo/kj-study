@@ -1,11 +1,11 @@
 package jisho
 
 import (
-	"fmt"
 	"maps"
 	"sync"
 
 	"github.com/imroc/req/v3"
+	"github.com/rs/zerolog/log"
 )
 
 // func args for get word sentences mt
@@ -76,29 +76,25 @@ func getWordSentences_mt(
     var currentEndPage int=currentPage+options.pagesPerWorker
     jobSubmit:
     for {
-        fmt.Println("current page:",currentPage)
-
         // if over the page end, done
         if currentPage>options.wordPageEnd {
-            fmt.Println("page end")
+            log.Info().Msgf("reached end of page jobs")
             break
         }
 
         // check if found an empty dict. if found, end job submission
         select {
             case <-foundEmptyDictSigCh:
-                fmt.Println("found empty dict")
                 break jobSubmit
 
             default:
         }
 
-        fmt.Println("submit job:",currentPage,currentEndPage)
+        log.Info().Msgf("getting page: %d - %d",currentPage,currentEndPage)
         wordJobsCh<-GetWordsJob{
             wordPageStart: currentPage,
             wordPageEnd: currentEndPage,
         }
-        fmt.Println("done submit job")
 
         currentPage=currentEndPage+1
         currentEndPage=currentPage+options.pagesPerWorker
@@ -108,13 +104,12 @@ func getWordSentences_mt(
     // done submitting jobs. close the jobs ch to kill workers
     close(wordJobsCh)
 
-    fmt.Println("all jobs submitted. waiting for workers to complete")
+    log.Info().Msgf("waiting for workers end")
     // wait for worker finish jobs
     wordWorkersWg.Wait()
 
     // close sentence submission ch to cause collector to
     // return final result
-    fmt.Println("all workers done")
     close(sentenceDictResultsCh)
 
     // wait for final result to come in
@@ -144,12 +139,9 @@ func wordWorker(
             client,
         )
 
-        fmt.Println("worker trying to submit")
         submitCh<-gotWordsDict
-        fmt.Println("submitted")
     }
 
-    fmt.Println("worker done")
     wg.Done()
 }
 
@@ -168,11 +160,11 @@ func dictMergeWorker(
     var collectedCount int=0
     var sentenceDict WordSentenceDict
     for sentenceDict = range sentenceDictsCh {
-        fmt.Println("collector got words",len(sentenceDict))
         collectedCount++
-        fmt.Println("collected:",collectedCount)
+        log.Info().Msgf("total jobs collected: %d",collectedCount)
+
         if len(sentenceDict)==0 {
-            fmt.Println("triggering empty dict")
+            log.Info().Msgf("worker returned empty dict")
             foundEmptySentenceDict<-struct{}{}
         }
 

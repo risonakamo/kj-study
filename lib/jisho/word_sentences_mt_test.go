@@ -2,10 +2,18 @@ package jisho
 
 import (
 	"fmt"
+	"kj-study/lib/utils"
 	"testing"
 
 	"github.com/imroc/req/v3"
 )
+
+func TestMain(m *testing.M) {
+    utils.ConfigureDefaultZeroLogger()
+
+    m.Run()
+}
+
 
 func Test_getWordsMt(t *testing.T) {
     result:=getWordSentences_mt(GetWordSentencesMtOptions{
@@ -44,4 +52,23 @@ func Test_getWordsMt(t *testing.T) {
             t.Errorf("missing expected word: %s",expectedWord)
         }
     }
+}
+
+// bigger mt test
+func Test_getWordsMt2(t *testing.T) {
+    result:=getWordSentences_mt(GetWordSentencesMtOptions{
+        nLevel: 2,
+
+        wordPageStart: 1,
+        wordPageEnd: 20,
+        sentencePageLimit: 3,
+
+        client: req.C(),
+
+        pagesPerWorker: 0,
+        workers: 4,
+    })
+
+    fmt.Println("got",len(result),"words")
+    fmt.Println("got",countSentences(result),"sentences")
 }
