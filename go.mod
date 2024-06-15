@@ -4,8 +4,11 @@ go 1.22.3
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
+	github.com/fatih/color v1.17.0
+	github.com/gosuri/uilive v0.0.4
 	github.com/imroc/req/v3 v3.43.7
 	github.com/k0kubun/pp/v3 v3.2.0
+	github.com/rs/zerolog v1.33.0
 )
 
 require (
@@ -18,12 +21,11 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/onsi/ginkgo/v2 v2.16.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
 	github.com/refraction-networking/utls v1.6.3 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect

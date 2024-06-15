@@ -4,6 +4,7 @@ import (
 	"maps"
 	"sync"
 
+	"github.com/fatih/color"
 	"github.com/imroc/req/v3"
 	"github.com/rs/zerolog/log"
 )
@@ -49,6 +50,8 @@ func getWordSentences_mt(
 
     var wordWorkersWg sync.WaitGroup
 
+    // var progressPrinter *WordSentenceMtProgress=newWordSentenceMtProgress()
+
     // spawn word workers
     for range options.workers {
         wordWorkersWg.Add(1)
@@ -65,6 +68,7 @@ func getWordSentences_mt(
 
     // spawn collector
     go dictMergeWorker(
+        // progressPrinter,
         sentenceDictResultsCh,
         foundEmptyDictSigCh,
         finalDictCh,
@@ -78,7 +82,7 @@ func getWordSentences_mt(
     for {
         // if over the page end, done
         if currentPage>options.wordPageEnd {
-            log.Info().Msgf("reached end of page jobs")
+            log.Info().Msgf(color.YellowString("reached end of page jobs"))
             break
         }
 
@@ -91,6 +95,7 @@ func getWordSentences_mt(
         }
 
         log.Info().Msgf("getting page: %d - %d",currentPage,currentEndPage)
+        // progressPrinter.addJob()
         wordJobsCh<-GetWordsJob{
             wordPageStart: currentPage,
             wordPageEnd: currentEndPage,
@@ -104,7 +109,7 @@ func getWordSentences_mt(
     // done submitting jobs. close the jobs ch to kill workers
     close(wordJobsCh)
 
-    log.Info().Msgf("waiting for workers end")
+    log.Info().Msgf(color.GreenString("waiting for workers end"))
     // wait for worker finish jobs
     wordWorkersWg.Wait()
 
@@ -112,6 +117,7 @@ func getWordSentences_mt(
     // return final result
     close(sentenceDictResultsCh)
 
+    // progressPrinter.end()
     // wait for final result to come in
     return <-finalDictCh
 }
@@ -151,6 +157,7 @@ func wordWorker(
 // additionally, if it encounters an empty dict, it will send a signal on found empty sentence dict
 // channel
 func dictMergeWorker(
+    // progressPrint *WordSentenceMtProgress,
     sentenceDictsCh <-chan WordSentenceDict,
     foundEmptySentenceDict chan<- struct{},
     finalSubmitCh chan<- WordSentenceDict,
@@ -162,6 +169,7 @@ func dictMergeWorker(
     for sentenceDict = range sentenceDictsCh {
         collectedCount++
         log.Info().Msgf("total jobs collected: %d",collectedCount)
+        // progressPrint.completeJob()
 
         if len(sentenceDict)==0 {
             log.Info().Msgf("worker returned empty dict")

@@ -10,6 +10,7 @@ import (
 
 func TestMain(m *testing.M) {
     utils.ConfigureDefaultZeroLogger()
+    // zerolog.SetGlobalLevel(zerolog.Disabled)
 
     m.Run()
 }
