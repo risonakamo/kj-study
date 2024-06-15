@@ -11,17 +11,17 @@ import (
 
 // func args for get word sentences mt
 type GetWordSentencesMtOptions struct {
-	nLevel int
+	NLevel int
 
-	wordPageStart int
-	wordPageEnd int
-	sentencePageLimit int
+	WordPageStart int
+	WordPageEnd int
+	SentencePageLimit int
 
-	client *req.Client
+	Client *req.Client
 
     // give 0 for each worker to do 1 page
-    pagesPerWorker int
-    workers int
+    PagesPerWorker int
+    Workers int
 }
 
 // job for word worker
@@ -31,7 +31,7 @@ type GetWordsJob struct {
 }
 
 // multithread version of get word sentences
-func getWordSentences_mt(
+func GetWordSentences_mt(
 	options GetWordSentencesMtOptions,
 ) WordSentenceDict {
     // word jobs submitted to be acted upon by word workers.
@@ -53,12 +53,12 @@ func getWordSentences_mt(
     // var progressPrinter *WordSentenceMtProgress=newWordSentenceMtProgress()
 
     // spawn word workers
-    for range options.workers {
+    for range options.Workers {
         wordWorkersWg.Add(1)
         go wordWorker(
-            options.nLevel,
-            options.sentencePageLimit,
-            options.client,
+            options.NLevel,
+            options.SentencePageLimit,
+            options.Client,
 
             wordJobsCh,
             sentenceDictResultsCh,
@@ -76,12 +76,12 @@ func getWordSentences_mt(
 
     // main thread worker - continuously submit jobs until hit the limit, or, found empty dict
     // signal triggered.
-    var currentPage int=options.wordPageStart
-    var currentEndPage int=currentPage+options.pagesPerWorker
+    var currentPage int=options.WordPageStart
+    var currentEndPage int=currentPage+options.PagesPerWorker
     jobSubmit:
     for {
         // if over the page end, done
-        if currentPage>options.wordPageEnd {
+        if currentPage>options.WordPageEnd {
             log.Info().Msgf(color.YellowString("reached end of page jobs"))
             break
         }
@@ -102,7 +102,7 @@ func getWordSentences_mt(
         }
 
         currentPage=currentEndPage+1
-        currentEndPage=currentPage+options.pagesPerWorker
+        currentEndPage=currentPage+options.PagesPerWorker
     }
 
 

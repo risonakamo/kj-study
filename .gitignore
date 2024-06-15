@@ -1,1 +1,4 @@
 *.gob
+word-data/*
+!word-data/keep.txt
+*.exe
