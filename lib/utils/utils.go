@@ -69,9 +69,9 @@ func GetCurrentDateSpecial() time.Time {
 
 // random pick from array, but with a daily seed. gives same thing each day
 // using special current date
-func RandomSliceDaily[T any](array []T,size int) []T {
-    var now time.Time=GetCurrentDateSpecial()
-    var dailySeed int64=now.UnixNano()/int64(time.Millisecond)
+// func RandomSliceDaily[T any](array []T,size int) []T {
+//     var now time.Time=GetCurrentDateSpecial()
+//     var dailySeed int64=now.UnixNano()/int64(time.Millisecond)
 
-    pcg:=rand.NewPCG(uint64(dailySeed),uint64(dailySeed))
-}
+//     pcg:=rand.NewPCG(uint64(dailySeed),uint64(dailySeed))
+// }

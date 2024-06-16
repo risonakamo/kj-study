@@ -37,15 +37,3 @@ func getWordSentencesFromApi(
 
     return wordsDict
 }
-
-// count number of sentences in word sentence dict
-func countSentences(wordsDict WordSentenceDict) int {
-    var count int=0
-
-    var sentences []string
-    for _,sentences = range wordsDict {
-        count+=len(sentences)
-    }
-
-    return count
-}

@@ -17,17 +17,17 @@ func TestMain(m *testing.M) {
 
 
 func Test_getWordsMt(t *testing.T) {
-    result:=getWordSentences_mt(GetWordSentencesMtOptions{
-        nLevel: 2,
+    result:=GetWordSentences_mt(GetWordSentencesMtOptions{
+        NLevel: 2,
 
-        wordPageStart: 1,
-        wordPageEnd: 5,
-        sentencePageLimit: 3,
+        WordPageStart: 1,
+        WordPageEnd: 5,
+        SentencePageLimit: 3,
 
-        client: req.C(),
+        Client: req.C(),
 
-        pagesPerWorker: 0,
-        workers: 20,
+        PagesPerWorker: 0,
+        Workers: 20,
     })
 
     fmt.Println("got",len(result),"words")
@@ -57,17 +57,17 @@ func Test_getWordsMt(t *testing.T) {
 
 // bigger mt test
 func Test_getWordsMt2(t *testing.T) {
-    result:=getWordSentences_mt(GetWordSentencesMtOptions{
-        nLevel: 2,
+    result:=GetWordSentences_mt(GetWordSentencesMtOptions{
+        NLevel: 2,
 
-        wordPageStart: 1,
-        wordPageEnd: 20,
-        sentencePageLimit: 3,
+        WordPageStart: 1,
+        WordPageEnd: 20,
+        SentencePageLimit: 3,
 
-        client: req.C(),
+        Client: req.C(),
 
-        pagesPerWorker: 0,
-        workers: 4,
+        PagesPerWorker: 0,
+        Workers: 4,
     })
 
     fmt.Println("got",len(result),"words")
