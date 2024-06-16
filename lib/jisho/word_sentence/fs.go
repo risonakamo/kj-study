@@ -59,3 +59,8 @@ func ReadSentences(
 
 	return data
 }
+
+// save array of split dicts into a folder full of numbered gob files
+func saveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
+
+}
