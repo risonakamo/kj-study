@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -52,4 +53,25 @@ func RandomSliceArray[T any](array []T,size int) []T {
     ShuffleArray(arrayCopy)
 
     return arrayCopy[0:size]
+}
+
+// get current date as a string, but with special condition. if the current time is before 8am,
+// then the date becomes the previous date
+func GetCurrentDateSpecial() time.Time {
+    var now time.Time=time.Now()
+
+    if now.Hour()<8 {
+        now=now.Add(-24*time.Hour)
+    }
+
+    return now
+}
+
+// random pick from array, but with a daily seed. gives same thing each day
+// using special current date
+func RandomSliceDaily[T any](array []T,size int) []T {
+    var now time.Time=GetCurrentDateSpecial()
+    var dailySeed int64=now.UnixNano()/int64(time.Millisecond)
+
+    pcg:=rand.NewPCG(uint64(dailySeed),uint64(dailySeed))
 }

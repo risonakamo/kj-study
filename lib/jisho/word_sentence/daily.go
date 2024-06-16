@@ -7,6 +7,4 @@ func getDailySet(
     sentenceDataDir string,
 ) WordSentenceDict {
     var allSentences WordSentenceDict=ReadSentences(sentenceDataDir)
-
-
 }
