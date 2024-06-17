@@ -5,6 +5,7 @@ package utils
 import (
 	"math/rand/v2"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -75,3 +76,14 @@ func GetCurrentDateSpecial() time.Time {
 
 //     pcg:=rand.NewPCG(uint64(dailySeed),uint64(dailySeed))
 // }
+
+// try to open web url or file with default program.
+// essentially runs program like it was double clicked
+func OpenTargetWithDefaultProgram(url string) {
+    var cmd *exec.Cmd=exec.Command("cmd","/c","start",url)
+    var e error=cmd.Run()
+
+    if e!=nil {
+        panic(e)
+    }
+}
