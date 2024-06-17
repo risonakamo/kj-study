@@ -10,8 +10,13 @@ import (
 
 // try to read a single split data file. only works after have run the data-splitter.exe
 func Test_readSingle(t *testing.T) {
-    data:=jisho_ws.ReadSingleSplitDict("../data/split-data/worddata1",2)
+    data:=jisho_ws.ReadSingleSplitDict("../data/split-data/worddata1","2")
     pp.Print(data)
 
     fmt.Println("words:",len(data))
+}
+
+func Test_getDataList(t *testing.T) {
+	result:=jisho_ws.GetSplitDictFilesList("../data/split-data/worddata1")
+	pp.Print(result)
 }

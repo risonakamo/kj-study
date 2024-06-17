@@ -87,3 +87,8 @@ func OpenTargetWithDefaultProgram(url string) {
         panic(e)
     }
 }
+
+// remove extension from a path
+func RemoveFileExtension(path string) string {
+    return strings.TrimSuffix(path,filepath.Ext(path))
+}

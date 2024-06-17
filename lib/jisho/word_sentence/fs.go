@@ -4,6 +4,7 @@ package jisho_ws
 
 import (
 	"fmt"
+	"io/fs"
 	"kj-study/lib/utils"
 	"os"
 	"path/filepath"
@@ -97,7 +98,36 @@ func SaveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
 
 // read a single split dict from a split dict dir. target a dir containing multiple split dict
 // files, and the index name to target
-func ReadSingleSplitDict(dirpath string,index int) WordSentenceDict {
-	var splitDictFileName string=filepath.Join(dirpath,fmt.Sprintf("%d.gob",index))
+func ReadSingleSplitDict(dirpath string,splitDictName string) WordSentenceDict {
+	var splitDictFileName string=filepath.Join(dirpath,fmt.Sprintf("%s.gob",splitDictName))
 	return readSentenceDict(splitDictFileName)
+}
+
+// for a target split dict folder, get the available file names in the folder.
+// filenames will not have file extension. expects single level.
+func GetSplitDictFilesList(dirpath string) []string {
+	var files []fs.DirEntry
+	var e error
+	files,e=os.ReadDir(dirpath)
+
+	if e!=nil {
+		panic(e)
+	}
+
+	var collectedFileNames []string
+
+	var file fs.DirEntry
+	for _,file = range files {
+		if file.IsDir() {
+			continue
+		}
+
+		if filepath.Ext(file.Name())!=".gob" {
+			continue
+		}
+
+		collectedFileNames=append(collectedFileNames,utils.RemoveFileExtension(file.Name()))
+	}
+
+	return collectedFileNames
 }
