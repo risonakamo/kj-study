@@ -1,6 +1,7 @@
 // funcs dealing with the word-sentence data struct, which combines words and sentences
 // into one data structure
 
+// jisho word sentence struct library
 package jisho_ws
 
 import (

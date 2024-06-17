@@ -2,10 +2,14 @@
 
 package jisho_ws
 
-import "golang.org/x/exp/maps"
+import (
+	"kj-study/lib/utils"
+
+	"golang.org/x/exp/maps"
+)
 
 // count number of sentences in word sentence dict
-func countSentences(wordsDict WordSentenceDict) int {
+func CountSentences(wordsDict WordSentenceDict) int {
     var count int=0
 
     var sentences []string
@@ -17,16 +21,22 @@ func countSentences(wordsDict WordSentenceDict) int {
 }
 
 // split a sentence dict into multiple dicts, with randomisation.
-// size of each smaller dict set by split dict size
-func splitDict(
+// size of each smaller dict set by split dict size.
+// give shuffle option to shuffle all words before splitting
+func SplitDict(
     wordsDict WordSentenceDict,
     splitDictSize int,
+    shuffle bool,
 ) []WordSentenceDict {
     if splitDictSize==0 {
         panic("bad split dict size")
     }
 
     var allWords []string=maps.Keys(wordsDict)
+
+    if shuffle {
+        utils.ShuffleArray[string](allWords)
+    }
 
     var collectedDicts []WordSentenceDict
     var newMiniDict WordSentenceDict=make(WordSentenceDict)

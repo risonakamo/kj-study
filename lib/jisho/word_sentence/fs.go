@@ -71,7 +71,7 @@ func writeSentenceDict(filename string,dict WordSentenceDict) {
 }
 
 // save array of split dicts into a folder full of numbered gob files
-func saveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
+func SaveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
 	var e error=os.MkdirAll(dirpath,0755)
 
 	if e!=nil {

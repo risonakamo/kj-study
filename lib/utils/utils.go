@@ -39,14 +39,14 @@ func GetHereDirExe() string {
     return filepath.Dir(exePath)
 }
 
-// shuffle an array
+// shuffle an array (in place)
 func ShuffleArray[T any](array []T) {
     rand.Shuffle(len(array),func (i int,j int) {
         (array)[i],(array)[j]=(array)[j],(array)[i]
     })
 }
 
-// random pick from array
+// random pick from array. does NOT mutate original array
 func RandomSliceArray[T any](array []T,size int) []T {
     var arrayCopy []T=array[:]
 
