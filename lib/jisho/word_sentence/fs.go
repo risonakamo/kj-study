@@ -47,18 +47,7 @@ func WriteSentences(
 func ReadSentences(
 	dirpath string,
 ) WordSentenceDict {
-	var data WordSentenceDict=make(WordSentenceDict)
-	var e error
-
-	data,e=utils.ReadGob[WordSentenceDict](
-		filepath.Join(dirpath,"data.gob"),
-	)
-
-	if e!=nil {
-		panic(e)
-	}
-
-	return data
+	return readSentenceDict(filepath.Join(dirpath,"data.gob"))
 }
 
 // write a single sentence dict to gob file. give filename with extension
@@ -68,6 +57,21 @@ func writeSentenceDict(filename string,dict WordSentenceDict) {
 	if e!=nil {
 		panic(e)
 	}
+}
+
+// read single sentence dict
+func readSentenceDict(filename string) WordSentenceDict {
+	var data WordSentenceDict=make(WordSentenceDict)
+	var e error
+	data,e=utils.ReadGob[WordSentenceDict](
+		filename,
+	)
+
+	if e!=nil {
+		panic(e)
+	}
+
+	return data
 }
 
 // save array of split dicts into a folder full of numbered gob files
@@ -89,4 +93,11 @@ func SaveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
 
 		writeSentenceDict(dictFileName,sentenceDict)
 	}
+}
+
+// read a single split dict from a split dict dir. target a dir containing multiple split dict
+// files, and the index name to target
+func ReadSingleSplitDict(dirpath string,index int) WordSentenceDict {
+	var splitDictFileName string=filepath.Join(dirpath,fmt.Sprintf("%d.gob",index))
+	return readSentenceDict(splitDictFileName)
 }
