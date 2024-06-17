@@ -3,6 +3,7 @@
 package jisho_ws
 
 import (
+	"fmt"
 	"kj-study/lib/utils"
 	"os"
 	"path/filepath"
@@ -60,7 +61,32 @@ func ReadSentences(
 	return data
 }
 
+// write a single sentence dict to gob file. give filename with extension
+func writeSentenceDict(filename string,dict WordSentenceDict) {
+	var e error=utils.WriteGob(filename,&dict)
+
+	if e!=nil {
+		panic(e)
+	}
+}
+
 // save array of split dicts into a folder full of numbered gob files
 func saveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
+	var e error=os.MkdirAll(dirpath,0755)
 
+	if e!=nil {
+		panic(e)
+	}
+
+	// for all sentence dicts, write a file named after the index
+	var i int
+	var sentenceDict WordSentenceDict
+	for i,sentenceDict = range sentenceDicts {
+		var dictFileName string=filepath.Join(
+			dirpath,
+			fmt.Sprintf("%d.gob",i+1),
+		)
+
+		writeSentenceDict(dictFileName,sentenceDict)
+	}
 }
