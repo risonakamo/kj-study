@@ -168,7 +168,7 @@ func dictMergeWorker(
     var sentenceDict WordSentenceDict
     for sentenceDict = range sentenceDictsCh {
         collectedCount++
-        log.Info().Msgf("total jobs collected: %d",collectedCount)
+        log.Info().Msgf("total sentence jobs collected: %d",collectedCount)
         // progressPrint.completeJob()
 
         if len(sentenceDict)==0 {

@@ -1,4 +1,4 @@
 *.gob
-word-data/*
-!word-data/keep.txt
+data/jisho-data/*
+!data/jisho-data/keep.txt
 *.exe

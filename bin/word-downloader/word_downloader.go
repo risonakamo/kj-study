@@ -1,4 +1,4 @@
-// program that downloads sentences to the word-data dir.
+// program that downloads sentences to the jisho-data dir.
 // configure with several options
 
 package main
@@ -30,7 +30,7 @@ func main() {
 
 
 	var here string=utils.GetHereDirExe()
-	var dataPath string=filepath.Join(here,"word-data",outputName)
+	var dataPath string=filepath.Join(here,"data/jisho-data",outputName)
 
 	fmt.Println("getting data")
 	var gotWords jisho_ws.WordSentenceDict=jisho_ws.GetWordSentences_mt(
