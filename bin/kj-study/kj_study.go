@@ -61,12 +61,19 @@ func main() {
     })
 
 
+
     // --- static
     app.Static("/",filepath.Join(here,"kj-study-web/build"))
 
 
 
 
-    // utils.OpenTargetWithDefaultProgram("http://localhost:4200")
+    // --- running
+    var e error=utils.OpenTargetWithDefaultProgram("http://localhost:4200")
+
+    if e!=nil {
+        log.Err(e).Msg("failed to open webpage with default program")
+    }
+
     app.Listen(":4200")
 }

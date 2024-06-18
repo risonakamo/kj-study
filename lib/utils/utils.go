@@ -79,13 +79,15 @@ func GetCurrentDateSpecial() time.Time {
 
 // try to open web url or file with default program.
 // essentially runs program like it was double clicked
-func OpenTargetWithDefaultProgram(url string) {
+func OpenTargetWithDefaultProgram(url string) error {
     var cmd *exec.Cmd=exec.Command("cmd","/c","start",url)
     var e error=cmd.Run()
 
     if e!=nil {
-        panic(e)
+        return e
     }
+
+    return nil
 }
 
 // remove extension from a path

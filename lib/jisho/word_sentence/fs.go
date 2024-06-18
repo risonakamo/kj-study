@@ -3,11 +3,14 @@
 package jisho_ws
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
 	"kj-study/lib/utils"
 	"os"
 	"path/filepath"
+
+	"github.com/rs/zerolog/log"
 )
 
 // info about a word sentence dict, for if want to regenerate
@@ -69,6 +72,11 @@ func readSentenceDict(filename string) WordSentenceDict {
 	)
 
 	if e!=nil {
+		if errors.Is(e,fs.ErrNotExist) {
+			log.Warn().Msgf("failed to read sentence file: %s",filename)
+			return data
+		}
+
 		panic(e)
 	}
 
