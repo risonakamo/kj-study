@@ -16,6 +16,9 @@ func main() {
     // --- config
     // name of word data folder to use. must be present inside data/split-data
     var splitDictsDataSrc string="worddata1"
+
+    var sentencesPerWordMin int=1
+    var sentencesPerWordMax int=2
     // --- end config
 
 
@@ -44,7 +47,7 @@ func main() {
         return c.JSON(kjFiles)
     })
 
-    // get a target kj file. file type is a word sentence dict
+    // get a target kj file, with random subsetting applied to the result
     app.Get("/get-kj-file/:filename",func(c fiber.Ctx) error {
         var filename string=c.Params("filename")
 
@@ -56,6 +59,8 @@ func main() {
         }
 
         response=jisho_ws.ReadSingleSplitDict(splitDictsDataSrc,filename)
+
+        response=jisho_ws.GetSentenceSubset(response,sentencesPerWordMin,sentencesPerWordMax)
 
         return c.JSON(response)
     })
