@@ -94,3 +94,8 @@ func OpenTargetWithDefaultProgram(url string) error {
 func RemoveFileExtension(path string) string {
     return strings.TrimSuffix(path,filepath.Ext(path))
 }
+
+// rand int between range. max included
+func RandIntRange(min int,max int) int {
+    return rand.IntN(max+1-min)+min
+}

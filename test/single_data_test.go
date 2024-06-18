@@ -20,3 +20,15 @@ func Test_getDataList(t *testing.T) {
 	result:=jisho_ws.GetSplitDictFilesList("../data/split-data/worddata1")
 	pp.Print(result)
 }
+
+func Test_sentenceSubset(t *testing.T) {
+	data:=jisho_ws.ReadSingleSplitDict("../data/split-data/worddata1","2")
+
+	subset:=jisho_ws.GetSentenceSubset(
+		data,
+		1,
+		3,
+	)
+
+	pp.Println(subset)
+}
