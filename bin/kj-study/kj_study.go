@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	jisho_ws "kj-study/lib/jisho/word_sentence"
+	"kj-study/lib/kj_study"
 	"kj-study/lib/utils"
 	"path/filepath"
 
@@ -16,6 +17,9 @@ func main() {
     // --- config
     // name of word data folder to use. must be present inside data/split-data
     var splitDictsDataSrc string="worddata1"
+    // name of word data file inside of the data dir to use. eventually, will want to be able
+    // to select this from ui
+    var selectedFile string="1"
 
     var sentencesPerWordMin int=1
     var sentencesPerWordMax int=2
@@ -25,6 +29,7 @@ func main() {
     // --- more variables
     var here string=utils.GetHereDirExe()
     splitDictsDataSrc=filepath.Join(here,"data/split-data",splitDictsDataSrc)
+    var sessionFile string=filepath.Join(here,"data/session.yml")
 
 
 
@@ -47,22 +52,24 @@ func main() {
         return c.JSON(kjFiles)
     })
 
-    // get a target kj file, with random subsetting applied to the result
-    app.Get("/get-kj-file/:filename",func(c fiber.Ctx) error {
-        var filename string=c.Params("filename")
+    // get the current session
+    app.Get("/get-session",func(c fiber.Ctx) error {
+        var session kj_study.KjStudySession=kj_study.GetSession(sessionFile)
 
-        var response jisho_ws.WordSentenceDict=make(jisho_ws.WordSentenceDict)
+        // session was empty. create a new session and write it
+        if len(session.WordSentences)==0 {
+            log.Info().Msg("creating new session")
+            session=kj_study.GenerateNewSession(
+                splitDictsDataSrc,
+                selectedFile,
+                sentencesPerWordMin,
+                sentencesPerWordMax,
+            )
 
-        if len(filename)==0 {
-            log.Warn().Msg("tried to get empty filename")
-            return c.JSON(response)
+            kj_study.WriteSession(sessionFile,&session)
         }
 
-        response=jisho_ws.ReadSingleSplitDict(splitDictsDataSrc,filename)
-
-        response=jisho_ws.GetSentenceSubset(response,sentencesPerWordMin,sentencesPerWordMax)
-
-        return c.JSON(response)
+        return c.JSON(session)
     })
 
 

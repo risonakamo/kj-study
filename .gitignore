@@ -2,3 +2,4 @@
 data/jisho-data/*
 !data/jisho-data/keep.txt
 *.exe
+session.yml

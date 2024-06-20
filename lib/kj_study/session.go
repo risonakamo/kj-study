@@ -18,19 +18,19 @@ const (
 
 // top level kj study session data
 type KjStudySession struct {
-    WordSentences []WordSentencePair
+    WordSentences []WordSentencePair `json:"wordSentences"`
 }
 
 // status of a word sentence pair. includes the pair information and user selections
 // of the pair
 type WordSentencePair struct {
-    Word string
-    Sentence string
-    Status WordSentenceStatus
+    Word string  `json:"word"`
+    Sentence string `json:"sentence"`
+    Status WordSentenceStatus `json:"status"`
 }
 
 // generate a new session from a word sentence file
-func generateNewSession(
+func GenerateNewSession(
     wordSentenceFilesDir string,
     wordSentenceFilename string,
     sentencesPerWordMin int,
