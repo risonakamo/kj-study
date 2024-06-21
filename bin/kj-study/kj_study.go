@@ -32,6 +32,15 @@ func main() {
     var sessionFile string=filepath.Join(here,"data/session.yml")
 
 
+    // --- app states
+    var session kj_study.KjStudySession=initialiseSession(
+        sessionFile,
+        splitDictsDataSrc,
+        selectedFile,
+        sentencesPerWordMin,
+        sentencesPerWordMax,
+    )
+
 
     // --- fiber setup
     var app *fiber.App=fiber.New(fiber.Config{
@@ -54,22 +63,34 @@ func main() {
 
     // get the current session
     app.Get("/get-session",func(c fiber.Ctx) error {
-        var session kj_study.KjStudySession=kj_study.GetSession(sessionFile)
+        return c.JSON(session)
+    })
 
-        // session was empty. create a new session and write it
-        if len(session.WordSentences)==0 {
-            log.Info().Msg("creating new session")
-            session=kj_study.GenerateNewSession(
-                splitDictsDataSrc,
-                selectedFile,
-                sentencesPerWordMin,
-                sentencesPerWordMax,
-            )
+    // update the session with change in a word sentence's state
+    app.Post("/set-sentence-state",func(c fiber.Ctx) error {
+        var wordSentenceUpdate kj_study.WordSentencePair
+        var e error=c.Bind().JSON(&wordSentenceUpdate)
 
-            kj_study.WriteSession(sessionFile,&session)
+        if e!=nil {
+            panic(e)
         }
 
-        return c.JSON(session)
+        e=kj_study.SetPairState(
+            &session,
+            wordSentenceUpdate.Word,
+            wordSentenceUpdate.Sentence,
+            wordSentenceUpdate.Status,
+        )
+
+        if e!=nil {
+            log.Warn().
+                AnErr("error",e).
+                Msg("error while setting pair state")
+
+            c.SendStatus(fiber.StatusInternalServerError)
+        }
+
+        return c.SendStatus(fiber.StatusOK)
     })
 
 
@@ -88,4 +109,30 @@ func main() {
     }
 
     app.Listen(":4200")
+}
+
+// get initial session object by reading file. if file didnt exist, then make new one
+func initialiseSession(
+    sessionFile string,
+    splitDictsDataSrc string,
+    selectedData string,
+    sentencesPerWordMin int,
+    sentencesPerWordMax int,
+) kj_study.KjStudySession {
+    var session kj_study.KjStudySession=kj_study.GetSession(sessionFile)
+
+    // session was empty. create a new session and write it
+    if len(session.WordSentences)==0 {
+        log.Info().Msg("creating new session")
+        session=kj_study.GenerateNewSession(
+            splitDictsDataSrc,
+            selectedData,
+            sentencesPerWordMin,
+            sentencesPerWordMax,
+        )
+
+        kj_study.WriteSession(sessionFile,&session)
+    }
+
+    return session
 }

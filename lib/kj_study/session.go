@@ -77,7 +77,7 @@ func wordSentenceDictToPairs(sentencesDict jisho_ws.WordSentenceDict) []WordSent
 }
 
 // mutate session. find a target word/sentence, and set state to specified state
-func setPairState(
+func SetPairState(
     session *KjStudySession,
 
     word string,
