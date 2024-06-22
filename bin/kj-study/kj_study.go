@@ -95,6 +95,20 @@ func main() {
         return c.SendStatus(fiber.StatusOK)
     })
 
+    // get new words for the current session. uses the same data file.
+    app.Get("/shuffle-session",func(c fiber.Ctx) error {
+        session=kj_study.GenerateNewSession(
+            splitDictsDataSrc,
+            selectedFile,
+            sentencesPerWordMin,
+            sentencesPerWordMax,
+        )
+
+        kj_study.WriteSession(sessionFile,&session)
+
+        return c.JSON(session)
+    })
+
 
 
     // --- static

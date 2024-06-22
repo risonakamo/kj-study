@@ -29,7 +29,8 @@ type WordSentencePair struct {
     Status WordSentenceStatus `json:"status"`
 }
 
-// generate a new session from a word sentence file
+// generate a new session from a word sentence file.
+// sentences are shuffled
 func GenerateNewSession(
     wordSentenceFilesDir string,
     wordSentenceFilename string,
