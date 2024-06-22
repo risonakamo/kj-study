@@ -90,6 +90,8 @@ func main() {
             c.SendStatus(fiber.StatusInternalServerError)
         }
 
+        kj_study.WriteSession(sessionFile,&session)
+
         return c.SendStatus(fiber.StatusOK)
     })
 

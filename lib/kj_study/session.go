@@ -84,10 +84,11 @@ func SetPairState(
     sentence string,
     newState WordSentenceStatus,
 ) error {
-    var pair WordSentencePair
-    for _,pair = range session.WordSentences {
-        if pair.Word==word && pair.Sentence==sentence {
-            pair.Status=newState
+    var pairI int
+    for pairI = range session.WordSentences {
+        if (session.WordSentences[pairI].Word==word &&
+        session.WordSentences[pairI].Sentence==sentence) {
+            session.WordSentences[pairI].Status=newState
             return nil
         }
     }
