@@ -16,30 +16,24 @@ func main() {
 
     // --- config
     // name of word data folder to use. must be present inside data/split-data
-    var splitDictsDataSrc string="worddata1"
-    // name of word data file inside of the data dir to use. eventually, will want to be able
-    // to select this from ui
-    var selectedFile string="1"
+    // this dir should contain multiple gob files. user will be able to select one of
+    // these files as the "active file"
+    var dataSrcDir string="worddata1"
 
-    var sentencesPerWordMin int=1
-    var sentencesPerWordMax int=2
+    var sentencesPerWordMin int=2
+    var sentencesPerWordMax int=3
     // --- end config
 
 
     // --- more variables
     var here string=utils.GetHereDirExe()
-    splitDictsDataSrc=filepath.Join(here,"data/split-data",splitDictsDataSrc)
     var sessionFile string=filepath.Join(here,"data/session.yml")
+    dataSrcDir=filepath.Join(here,"data/split-data",dataSrcDir)
 
 
     // --- app states
-    var session kj_study.KjStudySession=initialiseSession(
-        sessionFile,
-        splitDictsDataSrc,
-        selectedFile,
-        sentencesPerWordMin,
-        sentencesPerWordMax,
-    )
+    // load last session. if not exist, then this is empty
+    var session kj_study.KjStudySession=kj_study.GetSession(sessionFile)
 
 
     // --- fiber setup
@@ -54,11 +48,27 @@ func main() {
 
 
     // --- apis
-    // get the available kj filenames
+    // get the available datafiles
     app.Get("/get-kj-files",func(c fiber.Ctx) error {
-        var kjFiles []string=jisho_ws.GetSplitDictFilesList(splitDictsDataSrc)
+        var kjFiles []string=jisho_ws.GetSplitDictFilesList(dataSrcDir)
 
         return c.JSON(kjFiles)
+    })
+
+    // start a new session on the target data file name
+    app.Get("/start-new-session/:datafile",func(c fiber.Ctx) error {
+        var targetDataFile string=c.Params("datafile")
+
+        session=kj_study.GenerateNewSession(
+            dataSrcDir,
+            targetDataFile,
+            sentencesPerWordMin,
+            sentencesPerWordMax,
+        )
+
+        kj_study.WriteSession(sessionFile,&session)
+
+        return c.JSON(session)
     })
 
     // get the current session
@@ -96,10 +106,18 @@ func main() {
     })
 
     // get new words for the current session. uses the same data file.
+    // if there is no session loaded, returns an empty session
     app.Get("/shuffle-session",func(c fiber.Ctx) error {
+        // tried to gen new session but one has not yet been loaded yet. return the same
+        // empty session
+        if len(session.Datafile)==0 {
+            log.Warn().Msg("tried to shuffle session, but session has no datafile")
+            return c.JSON(session)
+        }
+
         session=kj_study.GenerateNewSession(
-            splitDictsDataSrc,
-            selectedFile,
+            dataSrcDir,
+            session.Datafile,
             sentencesPerWordMin,
             sentencesPerWordMax,
         )
@@ -125,30 +143,4 @@ func main() {
     }
 
     app.Listen(":4200")
-}
-
-// get initial session object by reading file. if file didnt exist, then make new one
-func initialiseSession(
-    sessionFile string,
-    splitDictsDataSrc string,
-    selectedData string,
-    sentencesPerWordMin int,
-    sentencesPerWordMax int,
-) kj_study.KjStudySession {
-    var session kj_study.KjStudySession=kj_study.GetSession(sessionFile)
-
-    // session was empty. create a new session and write it
-    if len(session.WordSentences)==0 {
-        log.Info().Msg("creating new session")
-        session=kj_study.GenerateNewSession(
-            splitDictsDataSrc,
-            selectedData,
-            sentencesPerWordMin,
-            sentencesPerWordMax,
-        )
-
-        kj_study.WriteSession(sessionFile,&session)
-    }
-
-    return session
 }

@@ -19,6 +19,9 @@ const (
 // top level kj study session data
 type KjStudySession struct {
     WordSentences []WordSentencePair `json:"wordSentences"`
+
+    // data file being used for this session
+    Datafile string `json:"datafile"`
 }
 
 // status of a word sentence pair. includes the pair information and user selections
@@ -53,6 +56,7 @@ func GenerateNewSession(
 
     return KjStudySession{
         WordSentences: sentencePairs,
+        Datafile: wordSentenceFilename,
     }
 
 }
