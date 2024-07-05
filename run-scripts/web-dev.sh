@@ -14,6 +14,7 @@ if [[ $linux == true ]]; then
     tmux send "nvm use lts/iron" Enter
 fi
 set -u
+tmux send "rm -rf build" Enter
 tmux send "pnpm watch" Enter
 
 tmux split-window -h -c $HERE
