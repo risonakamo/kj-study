@@ -63,7 +63,7 @@ func writeSentenceDict(filename string,dict WordSentenceDict) {
 	}
 }
 
-// read single sentence dict
+// read single sentence dict. performs deduplication
 func readSentenceDict(filename string) WordSentenceDict {
 	var data WordSentenceDict=make(WordSentenceDict)
 	var e error
@@ -79,6 +79,8 @@ func readSentenceDict(filename string) WordSentenceDict {
 
 		panic(e)
 	}
+
+	data=deduplicateWordSentences(data)
 
 	return data
 }

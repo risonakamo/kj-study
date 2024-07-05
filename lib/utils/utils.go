@@ -99,3 +99,34 @@ func RemoveFileExtension(path string) string {
 func RandIntRange(min int,max int) int {
     return rand.IntN(max+1-min)+min
 }
+
+// deduplicate items in array. returns new array. items are considered by their key fn, which
+// must return a string
+func DeduplicateBy[T any](
+    array []T,
+    keyFunc func(item *T) string,
+) []T {
+    var seenItems map[string]struct{}=make(map[string]struct{})
+    var deduplicatedResult []T
+
+    var itemI int
+    for itemI = range array {
+        var item *T=&array[itemI]
+
+        var itemKey string=keyFunc(item)
+
+        // if seen the item before, skip and do nothing
+        var in bool
+        _,in=seenItems[itemKey]
+
+        if in {
+            continue
+        }
+
+        // otherwise, mark seen it, and add to result
+        seenItems[itemKey]=struct{}{}
+        deduplicatedResult=append(deduplicatedResult,*item)
+    }
+
+    return deduplicatedResult
+}

@@ -52,12 +52,16 @@ func main() {
     app.Get("/get-kj-files",func(c fiber.Ctx) error {
         var kjFiles []string=jisho_ws.GetSplitDictFilesList(dataSrcDir)
 
+        log.Info().Msgf("got files: %d",len(kjFiles))
+
         return c.JSON(kjFiles)
     })
 
     // start a new session on the target data file name
     app.Get("/start-new-session/:datafile",func(c fiber.Ctx) error {
         var targetDataFile string=c.Params("datafile")
+
+        log.Info().Msgf("new session: %s",targetDataFile)
 
         session=kj_study.GenerateNewSession(
             dataSrcDir,
@@ -121,6 +125,8 @@ func main() {
             sentencesPerWordMin,
             sentencesPerWordMax,
         )
+
+        log.Info().Msgf("new shuffled sentences: %d",len(session.WordSentences))
 
         kj_study.WriteSession(sessionFile,&session)
 

@@ -6,6 +6,7 @@ package jisho_ws
 
 import (
 	"kj-study/lib/jisho"
+	"kj-study/lib/utils"
 
 	"github.com/imroc/req/v3"
 )
@@ -37,4 +38,22 @@ func getWordSentencesFromApi(
     }
 
     return wordsDict
+}
+
+// for all word's sentences arrays, deduplicate sentences (only within each word).
+// MUTATES the dict
+func deduplicateWordSentences(wordsdict WordSentenceDict) WordSentenceDict {
+    var word string
+    var words []string
+
+    for word,words = range wordsdict {
+        wordsdict[word]=utils.DeduplicateBy[string](
+            words,
+            func(item *string) string {
+                return *item
+            },
+        )
+    }
+
+    return wordsdict
 }
