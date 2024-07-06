@@ -7,4 +7,5 @@ bash word-downloader.sh
 bash kj-study.sh
 
 cd ../kj-study-web
+rm -rf build
 pnpm build
