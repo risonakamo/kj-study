@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/fs"
 	"kj-study/lib/utils"
+	"maps"
 	"os"
 	"path/filepath"
 
@@ -140,4 +141,21 @@ func GetSplitDictFilesList(dirpath string) []string {
 	}
 
 	return collectedFileNames
+}
+
+// read all split dict gobs in a target split dict folder. combines all into a single
+// word sentence dict
+func ReadAllSplitDicts(dirpath string) WordSentenceDict {
+	var datafiles []string=GetSplitDictFilesList(dirpath)
+
+	var collectedDict WordSentenceDict=make(WordSentenceDict)
+
+	var datafileName string
+	for _,datafileName = range datafiles {
+		var singleData WordSentenceDict=ReadSingleSplitDict(dirpath,datafileName)
+
+		maps.Copy(collectedDict,singleData)
+	}
+
+	return collectedDict
 }
