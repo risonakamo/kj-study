@@ -1,0 +1,3 @@
+- [ ] better system to choose data dir.  maybe read yml config file
+- [ ] detect when there is no internet, and hide the sentence/word/all search buttons
+- [x] copy current row missing right side key

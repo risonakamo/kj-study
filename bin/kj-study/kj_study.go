@@ -18,7 +18,8 @@ func main() {
     // name of word data folder to use. must be present inside data/split-data
     // this dir should contain multiple gob files. user will be able to select one of
     // these files as the "active file"
-    var dataSrcDir string="review-set1-shuffled"
+    // var dataSrcDir string="review-set1-shuffled"
+    var dataSrcDir string="worddata1"
 
     var sentencesPerWordMin int=2
     var sentencesPerWordMax int=3
