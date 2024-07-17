@@ -14,22 +14,15 @@ import (
 func main() {
     utils.ConfigureDefaultZeroLogger()
 
-    // --- config
-    // name of word data folder to use. must be present inside data/split-data
-    // this dir should contain multiple gob files. user will be able to select one of
-    // these files as the "active file"
-    // var dataSrcDir string="review-set1-shuffled"
-    var dataSrcDir string="worddata1"
-
-    var sentencesPerWordMin int=2
-    var sentencesPerWordMax int=3
-    // --- end config
-
-
-    // --- more variables
+    // --- vars
     var here string=utils.GetHereDirExe()
+
+    var kjStudyConfig kj_study.KjStudyConfig=kj_study.ReadKjStudyConfig(
+        filepath.Join(here,"data/config.yml"),
+    )
+
     var sessionFile string=filepath.Join(here,"data/session.yml")
-    dataSrcDir=filepath.Join(here,"data/split-data",dataSrcDir)
+    var dataSrcDir string=filepath.Join(here,"data/split-data",kjStudyConfig.DataDir)
 
 
     // --- app states
@@ -67,8 +60,8 @@ func main() {
         session=kj_study.GenerateNewSession(
             dataSrcDir,
             targetDataFile,
-            sentencesPerWordMin,
-            sentencesPerWordMax,
+            kjStudyConfig.SentenceConfig.Min,
+            kjStudyConfig.SentenceConfig.Max,
         )
 
         kj_study.WriteSession(sessionFile,&session)
@@ -123,8 +116,8 @@ func main() {
         session=kj_study.GenerateNewSession(
             dataSrcDir,
             session.Datafile,
-            sentencesPerWordMin,
-            sentencesPerWordMax,
+            kjStudyConfig.SentenceConfig.Min,
+            kjStudyConfig.SentenceConfig.Max,
         )
 
         log.Info().Msgf("new shuffled sentences: %d",len(session.WordSentences))
@@ -143,11 +136,15 @@ func main() {
 
 
     // --- running
-    var e error=utils.OpenTargetWithDefaultProgram("http://localhost:4200")
+    var e error=utils.OpenTargetWithDefaultProgram(
+        fmt.Sprintf("http://localhost:%d",kjStudyConfig.Port),
+    )
 
     if e!=nil {
         log.Err(e).Msg("failed to open webpage with default program")
     }
 
-    app.Listen(":4200")
+    app.Listen(
+        fmt.Sprintf(":%d",kjStudyConfig.Port),
+    )
 }

@@ -1,0 +1,14 @@
+# name of a dir that exists in data/split-data. will be used
+# as target data set.
+# dataDir: worddata1
+dataDir: review-set1-shuffled
+
+# when in a session, number of sentences that will be presented for
+# each word. does not affect the data (which has many words per sentence),
+# but will change size of each session
+sentences:
+  min: 2
+  max: 3
+
+# port to host on
+port: 4201
