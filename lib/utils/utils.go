@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -39,6 +40,16 @@ func GetHereDirExe() string {
 
     return filepath.Dir(exePath)
 }
+
+// when called, gives the location of the file that called this function
+// only works when using go run
+func GetHereDirRun() string {
+    var selfFilepath string
+    _,selfFilepath,_,_=runtime.Caller(1)
+
+    return filepath.Dir(selfFilepath)
+}
+
 
 // shuffle an array (in place)
 func ShuffleArray[T any](array []T) {

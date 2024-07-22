@@ -1,6 +1,7 @@
 package jisho_ws
 
 import (
+	"fmt"
 	"maps"
 	"sync"
 
@@ -154,6 +155,10 @@ func dictMergeWorker(
         collectedCount++
         log.Info().Msgf("total sentence jobs collected: %d",collectedCount)
         // progressPrint.completeJob()
+
+        for word := range sentenceDict {
+            fmt.Println(word)
+        }
 
 
         if len(sentenceDict)==0 {
