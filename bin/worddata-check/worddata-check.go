@@ -41,5 +41,9 @@ func main() {
 		}
 	}
 
+	for key,_ := range data {
+		fmt.Println(key)
+	}
+
 	fmt.Println("done")
 }
