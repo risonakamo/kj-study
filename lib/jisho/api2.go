@@ -4,8 +4,6 @@
 package jisho
 
 import (
-	"fmt"
-
 	"github.com/imroc/req/v3"
 )
 
@@ -24,7 +22,6 @@ func GetNLevelWordsMulti(
 
         // got an empty page. immediately end
         if len(newWords)==0 {
-            fmt.Println("empty")
             return collected
         }
 
