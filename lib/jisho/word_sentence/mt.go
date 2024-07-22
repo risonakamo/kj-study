@@ -45,9 +45,6 @@ func GetWordSentences_mt(
     // 1 time ch. collector worker submits to here once
     var finalDictCh chan WordSentenceDict=make(chan WordSentenceDict)
 
-    // signal ch. recv item if collector worker detected an empty dict
-    var foundEmptyDictSigCh chan struct{}=make(chan struct{})
-
     var wordWorkersWg sync.WaitGroup
 
     // var progressPrinter *WordSentenceMtProgress=newWordSentenceMtProgress()
@@ -70,7 +67,6 @@ func GetWordSentences_mt(
     go dictMergeWorker(
         // progressPrinter,
         sentenceDictResultsCh,
-        foundEmptyDictSigCh,
         finalDictCh,
     )
 
@@ -78,20 +74,11 @@ func GetWordSentences_mt(
     // signal triggered.
     var currentPage int=options.WordPageStart
     var currentEndPage int=currentPage+options.PagesPerWorker
-    jobSubmit:
     for {
         // if over the page end, done
         if currentPage>options.WordPageEnd {
             log.Info().Msgf(color.YellowString("reached end of page jobs"))
             break
-        }
-
-        // check if found an empty dict. if found, end job submission
-        select {
-            case <-foundEmptyDictSigCh:
-                break jobSubmit
-
-            default:
         }
 
         log.Info().Msgf("getting page: %d - %d",currentPage,currentEndPage)
@@ -154,12 +141,9 @@ func wordWorker(
 // recvs word sentences and continuously merges into a collected dict.
 // upon sentence dict ch closing, submits the collected dict into final
 // submit ch.
-// additionally, if it encounters an empty dict, it will send a signal on found empty sentence dict
-// channel
 func dictMergeWorker(
     // progressPrint *WordSentenceMtProgress,
     sentenceDictsCh <-chan WordSentenceDict,
-    foundEmptySentenceDict chan<- struct{},
     finalSubmitCh chan<- WordSentenceDict,
 ) {
     var collectedDict WordSentenceDict=make(WordSentenceDict)
@@ -171,13 +155,15 @@ func dictMergeWorker(
         log.Info().Msgf("total sentence jobs collected: %d",collectedCount)
         // progressPrint.completeJob()
 
+
         if len(sentenceDict)==0 {
-            log.Info().Msgf("worker returned empty dict")
-            foundEmptySentenceDict<-struct{}{}
+            log.Info().Msgf("recved empty dict from worker")
+            continue
         }
 
         maps.Copy(collectedDict,sentenceDict)
     }
 
+    log.Info().Msg("dict merge worker done")
     finalSubmitCh<-collectedDict
 }
