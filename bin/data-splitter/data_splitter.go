@@ -1,6 +1,7 @@
-// data splitter exe. reads a target jisho data dir and splits it into pieces.
-// the data can be shuffled before splitting into pieces.
+// reads several target jisho data dirs, combines them all, and splits them into
+// pieces. the data can be shuffled before splitting.
 // check config section for options
+// run with go run
 
 package main
 

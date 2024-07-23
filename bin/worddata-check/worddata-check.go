@@ -12,16 +12,31 @@ import (
 
 func main() {
 	// --- config
+	// // name of data dir in data/jisho-data
+	// var dataDirName string="worddata2"
+
+	// // list of words to check for
+	// var checkWords []string=[]string{
+	// 	"カラー",
+	// 	"算盤",
+	// 	"仲直り",
+	// 	"懐かしい",
+	// 	"賞金",
+	// }
+
+	// set 2
 	// name of data dir in data/jisho-data
-	var dataDirName string="worddata2"
+	var dataDirName string="worddata1"
 
 	// list of words to check for
 	var checkWords []string=[]string{
-		"カラー",
-		"算盤",
-		"仲直り",
-		"懐かしい",
-		"賞金",
+		"けど",
+		"押さえる",
+		// "当たり前", // on page 21
+		"柔らかい",
+		"直す",
+		"売買",
+		"交流",
 	}
 	// --- end config
 
@@ -41,9 +56,9 @@ func main() {
 		}
 	}
 
-	for key,_ := range data {
-		fmt.Println(key)
-	}
+	// for key,_ := range data {
+	// 	fmt.Println(key)
+	// }
 
 	fmt.Println("done")
 }

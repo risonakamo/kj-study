@@ -1,5 +1,6 @@
 // program that downloads sentences to the jisho-data dir.
 // configure with several options
+// run with go run
 
 package main
 
@@ -29,8 +30,8 @@ func main() {
 	// --- end config
 
 
-	var here string=utils.GetHereDirExe()
-	var dataPath string=filepath.Join(here,"data/jisho-data",outputName)
+	var here string=utils.GetHereDirRun()
+	var dataPath string=filepath.Join(here,"../../data/jisho-data",outputName)
 
 	fmt.Println("getting data")
 	var gotWords jisho_ws.WordSentenceDict=jisho_ws.GetWordSentences_mt(
