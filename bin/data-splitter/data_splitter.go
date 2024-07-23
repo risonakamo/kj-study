@@ -15,14 +15,19 @@ import (
 func main() {
     // --- config
     // name of a jisho data dir present in jisho-data
-    var targetData string="worddata1"
+    var targetData string="worddata2"
 
     var wordsPerSplit int=10
+
+    // the first split gob created will take this number
+    var startingSplitDirNum int=39
     // --- end config
 
-    var here string=utils.GetHereDirExe()
-    var jishoDataDir string=filepath.Join(here,"data/jisho-data",targetData)
-    var splitDataPath=filepath.Join(here,"data/split-data",targetData)
+
+
+    var here string=utils.GetHereDirRun()
+    var jishoDataDir string=filepath.Join(here,"../../data/jisho-data",targetData)
+    var splitDataPath=filepath.Join(here,"../../data/split-data",targetData)
 
 
     var fullSentencesDict jisho_ws.WordSentenceDict=jisho_ws.ReadSentences(jishoDataDir)
@@ -41,7 +46,7 @@ func main() {
     fmt.Println()
 
     fmt.Println("saving to:",splitDataPath)
-    jisho_ws.SaveSplitDicts(splitDataPath,splittedDicts)
+    jisho_ws.SaveSplitDicts(splitDataPath,splittedDicts,startingSplitDirNum)
     fmt.Println()
 
     fmt.Println("complete")

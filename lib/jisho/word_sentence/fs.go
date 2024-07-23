@@ -87,7 +87,11 @@ func readSentenceDict(filename string) WordSentenceDict {
 }
 
 // save array of split dicts into a folder full of numbered gob files
-func SaveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
+func SaveSplitDicts(
+	dirpath string,
+	sentenceDicts []WordSentenceDict,
+	initialNumber int,
+) {
 	var e error=os.MkdirAll(dirpath,0755)
 
 	if e!=nil {
@@ -100,7 +104,7 @@ func SaveSplitDicts(dirpath string,sentenceDicts []WordSentenceDict) {
 	for i,sentenceDict = range sentenceDicts {
 		var dictFileName string=filepath.Join(
 			dirpath,
-			fmt.Sprintf("%d.gob",i+1),
+			fmt.Sprintf("%d.gob",i+initialNumber),
 		)
 
 		writeSentenceDict(dictFileName,sentenceDict)
