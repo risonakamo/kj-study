@@ -38,6 +38,20 @@ func getNLevelWords(
 		panic(e)
 	}
 
+	if doc.Find("#primary h4").Length()==0 {
+		log.Error().Msg("page was missing an expected element")
+
+		var html string
+		html,e=doc.Html()
+
+		if e!=nil {
+			panic(e)
+		}
+
+		log.Error().Msgf("the page:\n%s",html)
+		panic("bad page")
+	}
+
 	var collectedWords []string
 	// target words and add them to collection. trim the words.
 	doc.Find("span.text").Each(func(i int,element *goquery.Selection) {

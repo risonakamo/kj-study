@@ -4,9 +4,8 @@
 package jisho
 
 import (
-	"fmt"
-
 	"github.com/imroc/req/v3"
+	"github.com/rs/zerolog/log"
 )
 
 // get N level words words from range of pages. if get a page where the result is empty, immediately stops
@@ -24,7 +23,7 @@ func GetNLevelWordsMulti(
 
         // got an empty page. immediately end
         if len(newWords)==0 {
-            fmt.Println("empty page:",page)
+            log.Warn().Msgf("got page with no words: %d",page)
             return collected
         }
 

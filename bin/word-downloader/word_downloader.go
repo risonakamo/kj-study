@@ -17,14 +17,14 @@ func main() {
 
 
 	// --- config
-	var outputName string="worddata1"
+	var outputName string="worddata2"
 
 	var nLevel int=2
 	var pageStart int=21
 	var pageEnd int=95
 	var sentencePagesPerWord int=4
 
-	var workers int=50
+	var workers int=10
 	var pagesPerWorker int=0
 	// --- end config
 

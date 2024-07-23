@@ -1,7 +1,6 @@
 package jisho_ws
 
 import (
-	"fmt"
 	"maps"
 	"sync"
 
@@ -156,17 +155,14 @@ func dictMergeWorker(
         log.Info().Msgf("total sentence jobs collected: %d",collectedCount)
         // progressPrint.completeJob()
 
-        for word := range sentenceDict {
-            fmt.Println(word)
-        }
-
-
         if len(sentenceDict)==0 {
             log.Info().Msgf("recved empty dict from worker")
             continue
         }
 
         maps.Copy(collectedDict,sentenceDict)
+
+        log.Info().Msgf("collected words: %d",len(collectedDict))
     }
 
     log.Info().Msg("dict merge worker done")
