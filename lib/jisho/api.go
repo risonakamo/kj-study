@@ -38,7 +38,7 @@ func getNLevelWords(
 		panic(e)
 	}
 
-	if doc.Find("#primary h4").Length()==0 {
+	if doc.Find("#input_methods").Length()==0 {
 		log.Error().Msg("page was missing an expected element")
 
 		var html string

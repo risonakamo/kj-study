@@ -3,6 +3,7 @@ package jisho_ws
 import (
 	"maps"
 	"sync"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/imroc/req/v3"
@@ -22,6 +23,10 @@ type GetWordSentencesMtOptions struct {
     // give 0 for each worker to do 1 page
     PagesPerWorker int
     Workers int
+
+	// number of ms to wait between worker collections.
+	// used as rate limiter
+    CollectorDelay int
 }
 
 // job for word worker
@@ -68,6 +73,7 @@ func GetWordSentences_mt(
         // progressPrinter,
         sentenceDictResultsCh,
         finalDictCh,
+        options.CollectorDelay,
     )
 
     // main thread worker - continuously submit jobs until hit the limit, or, found empty dict
@@ -145,11 +151,13 @@ func dictMergeWorker(
     // progressPrint *WordSentenceMtProgress,
     sentenceDictsCh <-chan WordSentenceDict,
     finalSubmitCh chan<- WordSentenceDict,
+    collectorDelay int,
 ) {
     var collectedDict WordSentenceDict=make(WordSentenceDict)
 
     var collectedCount int=0
     var sentenceDict WordSentenceDict
+
     for sentenceDict = range sentenceDictsCh {
         collectedCount++
         log.Info().Msgf("total sentence jobs collected: %d",collectedCount)
@@ -163,7 +171,10 @@ func dictMergeWorker(
         maps.Copy(collectedDict,sentenceDict)
 
         log.Info().Msgf("collected words: %d",len(collectedDict))
+
+        time.Sleep(time.Duration(collectorDelay)*time.Millisecond)
     }
+
 
     log.Info().Msg("dict merge worker done")
     finalSubmitCh<-collectedDict

@@ -12,32 +12,55 @@ import (
 
 func main() {
 	// --- config
-	// // name of data dir in data/jisho-data
-	// var dataDirName string="worddata2"
-
-	// // list of words to check for
-	// var checkWords []string=[]string{
-	// 	"カラー",
-	// 	"算盤",
-	// 	"仲直り",
-	// 	"懐かしい",
-	// 	"賞金",
-	// }
-
-	// set 2
 	// name of data dir in data/jisho-data
-	var dataDirName string="worddata1"
+	var dataDirName string="worddata2"
 
 	// list of words to check for
 	var checkWords []string=[]string{
-		"けど",
-		"押さえる",
-		// "当たり前", // on page 21
-		"柔らかい",
-		"直す",
-		"売買",
-		"交流",
+		"カラー",
+		"算盤",
+		"仲直り",
+		"懐かしい",
+		"賞金",
+		"お菜",
+		"正味",
+		"外れる",
+		"一段", // 33
+		"膨大",
+		"混合",
+		"破片",
+		"特殊",
+		"問い合わせ",
+		"用語",
+		"外れる",
+		"方針",
+		"薄暗い",
 	}
+
+	// set 1
+	// // name of data dir in data/jisho-data
+	// var dataDirName string="worddata1"
+
+	// // list of words to check for
+	// var checkWords []string=[]string{
+	// 	"けど",
+	// 	"押さえる",
+	// 	// "当たり前", // on page 21
+	// 	"柔らかい",
+	// 	"直す",
+	// 	"売買",
+	// 	"交流",
+	// }
+
+	// set 3
+	// // name of data dir in data/jisho-data
+	// var dataDirName string="worddata3"
+
+	// // list of words to check for
+	// var checkWords []string=[]string{
+	// 	"一段", // 33
+	// 	"加速",
+	// }
 	// --- end config
 
 
@@ -56,7 +79,7 @@ func main() {
 		}
 	}
 
-	// for key,_ := range data {
+	// for key := range data {
 	// 	fmt.Println(key)
 	// }
 

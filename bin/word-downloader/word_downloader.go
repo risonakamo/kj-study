@@ -18,15 +18,19 @@ func main() {
 
 
 	// --- config
-	var outputName string="worddata2"
+	var outputName string="worddata3"
 
 	var nLevel int=2
 	var pageStart int=21
-	var pageEnd int=95
+	var pageEnd int=38
 	var sentencePagesPerWord int=4
 
 	var workers int=10
 	var pagesPerWorker int=0
+
+	// number of ms to wait between worker collections.
+	// used as rate limiter
+	var collectorDelay int=4000
 	// --- end config
 
 
@@ -43,6 +47,7 @@ func main() {
 			Client: req.C(),
 			PagesPerWorker: pagesPerWorker,
 			Workers: workers,
+			CollectorDelay: collectorDelay,
 		},
 	)
 
